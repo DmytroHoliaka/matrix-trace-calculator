@@ -17,14 +17,26 @@ namespace MatrixTrace.Tests.UnitTesting.xUnit
         }
 
         [Theory]
-        [ClassData(typeof(MatrixDataForArgumentException))]
+        [ClassData(typeof(IncorrectMartrix))]
         public void MatrixHandlerCtor_IncorrectMatrix_ThrowsArgumentOutOfRangeException(int[,] matrix)
         {
             // Assert
             Assert.Throws<ArgumentOutOfRangeException>(() => new MatrixHandler(matrix));
         }
 
-        private class MatrixDataForArgumentException : IEnumerable<object[]>
+        [Theory]
+        [ClassData(typeof(CorrectInstancesOfMatrixHandler))]
+        public void GetMatrixTrace_CorrectMatrix_ReturnsMatrixTrace(MatrixHandler matrix, int expected)
+        {
+            // Arrange
+            int actual = matrix.GetMatrixTrace();
+
+            // Assert
+            Assert.Equal(expected, actual);
+        }
+
+
+        private class IncorrectMartrix : IEnumerable<object[]>
         {
             IEnumerator IEnumerable.GetEnumerator()
             {
@@ -33,10 +45,32 @@ namespace MatrixTrace.Tests.UnitTesting.xUnit
 
             public IEnumerator<object[]> GetEnumerator()
             {
-                yield return new object[] {IncorrectMatrixExamples.matrix1};
-                yield return new object[] {IncorrectMatrixExamples.matrix2};
-                yield return new object[] {IncorrectMatrixExamples.matrix3};
+                yield return new object[] { IncorrectMatrixExamples.matrix1 };
+                yield return new object[] { IncorrectMatrixExamples.matrix2 };
+                yield return new object[] { IncorrectMatrixExamples.matrix3 };
+            }
+        }
+
+        private class CorrectInstancesOfMatrixHandler : IEnumerable<object[]>
+        {
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
+            }
+
+            public IEnumerator<object[]> GetEnumerator()
+            {
+                yield return new object[] { new MatrixHandler(CorrectMatrixExamples.matrix1), 1 };
+                yield return new object[] { new MatrixHandler(CorrectMatrixExamples.matrix2), 1 };
+                yield return new object[] { new MatrixHandler(CorrectMatrixExamples.matrix3), 1 };
+                yield return new object[] { new MatrixHandler(CorrectMatrixExamples.matrix4), 1 };
+                yield return new object[] { new MatrixHandler(CorrectMatrixExamples.matrix5), 1 };
+                yield return new object[] { new MatrixHandler(CorrectMatrixExamples.matrix6), 13 };
+                yield return new object[] { new MatrixHandler(CorrectMatrixExamples.matrix7), 37 };
+                yield return new object[] { new MatrixHandler(CorrectMatrixExamples.matrix8), 31 };
             }
         }
     }
+
+
 }

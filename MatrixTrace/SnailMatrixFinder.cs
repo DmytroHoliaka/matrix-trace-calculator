@@ -25,7 +25,7 @@ namespace MatrixTrace
 
             if (matrix.GetLength(0) == 0 || matrix.GetLength(1) == 0)
             {
-                throw new ArgumentOutOfRangeException("Incorrect matrix dimension", nameof(matrix));
+                throw new ArgumentOutOfRangeException(nameof(matrix), "Incorrect matrix dimension");
             }
 
             int edgeSignal = -1;
