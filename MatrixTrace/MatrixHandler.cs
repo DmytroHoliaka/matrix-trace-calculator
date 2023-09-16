@@ -10,19 +10,20 @@ namespace MatrixTrace
     public class MatrixHandler
     {
         private int[,] _matrix;
-        private int Rows { get; }      
-        private int Columns { get; } 
-        
-        public int[,] Matrix                
-        {
-            get => this._matrix.Clone() as int[,];
-            private set => this._matrix = value;
-        }
+        private int _rows;
+        private int _columns;
+
+        public int[,] Matrix => _matrix.Clone() as int[,];
 
         public MatrixHandler(int rows, int columns)
         {
-            (this.Rows, this.Columns) = (rows, columns);
-            this._matrix = new int[this.Rows, this.Columns];
+            if (rows <= 0 || columns <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(rows), "Amount of rows and columns must be positive");
+            }
+
+            (_rows, _columns) = (rows, columns);
+            _matrix = new int[_rows, _columns];
         }
 
         public MatrixHandler(int[,] matrix)
@@ -37,39 +38,39 @@ namespace MatrixTrace
                 throw new ArgumentOutOfRangeException(nameof(matrix), "A matrix cannot have zero dimension");
             }
 
-            this.Rows = matrix.GetLength(0);
-            this.Columns = matrix.GetLength(1);
-            this._matrix = matrix.Clone() as int[,];
+            _rows = matrix.GetLength(0);
+            _columns = matrix.GetLength(1);
+            _matrix = matrix.Clone() as int[,];
         }
 
         public void FillMatrix()
         {
             Random rand = new();
 
-            for (int r = 0; r < this.Rows; ++r)
+            for (int r = 0; r < _rows; ++r)
             {
-                for (int c = 0; c < this.Columns; ++c)
+                for (int c = 0; c < _columns; ++c)
                 {
-                    this._matrix[r, c] = rand.Next(0, 101);
+                    _matrix[r, c] = rand.Next(0, 101);
                 }
             }
         }
 
         public void PrintMatrix()
         {
-            for (int r = 0; r < this.Rows; ++r)
+            for (int r = 0; r < _rows; ++r)
             {
-                for (int c = 0; c < this.Columns; ++c)
+                for (int c = 0; c < _columns; ++c)
                 {
                     if (r == c)
                     {
                         Console.ForegroundColor = ConsoleColor.Green;
-                        Console.Write(string.Format("{0, -5}", this._matrix[r, c] + " "));
+                        Console.Write(string.Format("{0, -5}", _matrix[r, c] + " "));
                         Console.ResetColor();
                     }
                     else
                     {
-                        Console.Write(string.Format("{0, -5}", this._matrix[r, c] + " "));
+                        Console.Write(string.Format("{0, -5}", _matrix[r, c] + " "));
                     }
                 }
 
@@ -79,72 +80,15 @@ namespace MatrixTrace
 
         public int GetMatrixTrace()
         {
-            if (this._matrix.GetLength(0) == this._matrix.GetLength(1))
-            {
-                return GetSquareMatrixTrace();
-            }
-
-            return GetRectangleMatrixTrace();
-        }
-
-        private int GetSquareMatrixTrace()
-        {
+            int smallerDimension = Math.Min(_rows, _columns);
             int matrixTrace = 0;
 
-            for (int i = 0; i < this._matrix.GetLength(0); ++i)
+            for (int i = 0; i < smallerDimension; ++i)
             {
-                matrixTrace += this._matrix[i, i];
+                matrixTrace += _matrix[i, i];
             }
 
             return matrixTrace;
         }
-
-        private int GetRectangleMatrixTrace()
-        {
-            int rows = this._matrix.GetLength(0);
-            int columns = this._matrix.GetLength(1);
-
-            if (rows > columns)
-            {
-                return GetBottomRectangleMatrixTrace();
-            }
-
-            return this.GetRightRectangleMatrixTrace();
-        }
-
-        private int GetRightRectangleMatrixTrace()
-        {
-            if (this._matrix.GetLength(0) == 1)
-            {
-                return this._matrix[0, 0];
-            }
-
-            int matrixTrace = this._matrix[0, 0];
-
-            for (int i = 0; i < this._matrix.GetLength(0) - 1; ++i)
-            {
-                matrixTrace += this._matrix[i, i + 1] + this._matrix[i + 1, i + 1];
-            }
-
-            return matrixTrace;
-        }
-
-        private int GetBottomRectangleMatrixTrace()
-        {
-            if (this._matrix.GetLength(1) == 1)
-            {
-                return this._matrix[0, 0];
-            }
-
-            int matrixTrace = 0;
-
-            for (int i = 0; i < this._matrix.GetLength(1) - 1; ++i)
-            {
-                matrixTrace += this._matrix[i, i] + this._matrix[i, i + 1];
-            }
-
-            return matrixTrace;
-        }
-
     }
 }

@@ -9,6 +9,16 @@ namespace MatrixTrace.Tests.UnitTesting.xUnit
 {
     public class MatrixHandlerTests
     {
+        [Theory]
+        [InlineData(0, 0)]
+        [InlineData(0, 1)]
+        [InlineData(1, 0)]
+        public void MatrixHandlerCtor_IncorrectDimension_ThrowsArgumentOutOfRangeException(int rows, int columns)
+        {
+            // Assert
+            Assert.Throws<ArgumentOutOfRangeException>(() => new MatrixHandler(rows, columns));
+        }
+
         [Fact]
         public void MatrixHandlerCtor_Null_ThrowsArgumentException()
         {
@@ -66,8 +76,8 @@ namespace MatrixTrace.Tests.UnitTesting.xUnit
                 yield return new object[] { new MatrixHandler(CorrectMatrixExamples.matrix4), 1 };
                 yield return new object[] { new MatrixHandler(CorrectMatrixExamples.matrix5), 1 };
                 yield return new object[] { new MatrixHandler(CorrectMatrixExamples.matrix6), 13 };
-                yield return new object[] { new MatrixHandler(CorrectMatrixExamples.matrix7), 37 };
-                yield return new object[] { new MatrixHandler(CorrectMatrixExamples.matrix8), 31 };
+                yield return new object[] { new MatrixHandler(CorrectMatrixExamples.matrix7), 20 };
+                yield return new object[] { new MatrixHandler(CorrectMatrixExamples.matrix8), 16 };
             }
         }
     }
