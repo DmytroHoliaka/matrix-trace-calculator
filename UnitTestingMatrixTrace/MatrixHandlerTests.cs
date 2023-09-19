@@ -10,6 +10,37 @@ namespace MatrixTrace.Tests.UnitTesting.xUnit
     public class MatrixHandlerTests
     {
         [Theory]
+        [InlineData(5, 10)]
+        [InlineData(10, 5)]
+        [InlineData(100, 100)]
+        public void FillMatrix_MatrixDimension_ReturnsCorrectMatrixValue(int rows, int columns)
+        {
+            // Arrange
+            MatrixHandler matrix = new(rows, columns);
+            matrix.FillMatrix();
+
+            // Act
+            bool flag = IsMatrixContainsWrongElements(matrix.Matrix, 0, 100);
+
+            // Assert
+            Assert.False(flag);
+        }
+
+        [Theory]
+        [InlineData(5, 10)]
+        [InlineData(10, 5)]
+        [InlineData(10, 10)]
+        public void MatrixHandlerCtor_MatrixDimension_ReturnsMatrixWithCorrectDimension(int rows, int columns)
+        {
+            // Act
+            MatrixHandler actual = new(rows, columns);
+
+            // Assert
+            Assert.Equal(rows, actual.Matrix.GetLength(0));
+            Assert.Equal(columns, actual.Matrix.GetLength(1));
+        }
+
+        [Theory]
         [InlineData(0, 0)]
         [InlineData(0, 1)]
         [InlineData(1, 0)]
@@ -35,7 +66,7 @@ namespace MatrixTrace.Tests.UnitTesting.xUnit
         }
 
         [Theory]
-        [ClassData(typeof(CorrectInstancesOfMatrixHandler))]
+        [ClassData(typeof(CorrectInstancesOfMatrixHandlerWithMatrixTrace))]
         public void GetMatrixTrace_CorrectMatrix_ReturnsMatrixTrace(MatrixHandler matrix, int expected)
         {
             // Arrange
@@ -45,6 +76,24 @@ namespace MatrixTrace.Tests.UnitTesting.xUnit
             Assert.Equal(expected, actual);
         }
 
+        private static bool IsMatrixContainsWrongElements(int[,] matrix, int min, int max)
+        {
+            bool flag = false;
+
+            for (int i = 0; i < matrix.GetLength(0); ++i)
+            {
+                for (int j = 0; j < matrix.GetLength(1); ++j)
+                {
+                    if (matrix[i, j] < min || matrix[i, j] > max)
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+
+            return flag;
+        }
 
         private class IncorrectMartrix : IEnumerable<object[]>
         {
@@ -61,7 +110,7 @@ namespace MatrixTrace.Tests.UnitTesting.xUnit
             }
         }
 
-        private class CorrectInstancesOfMatrixHandler : IEnumerable<object[]>
+        private class CorrectInstancesOfMatrixHandlerWithMatrixTrace : IEnumerable<object[]>
         {
             IEnumerator IEnumerable.GetEnumerator()
             {
@@ -81,6 +130,4 @@ namespace MatrixTrace.Tests.UnitTesting.xUnit
             }
         }
     }
-
-
 }
